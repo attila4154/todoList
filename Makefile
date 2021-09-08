@@ -40,7 +40,10 @@ program=todoList
 CC=g++
 CFLAGS= -Wall -pedantic -g -fsanitize=address
 
-all: compile run clear
+SRC= src/main.cpp src/App1.cpp src/interface.cpp src/calendar.cpp src/done.cpp src/todo.cpp
+LIB= lib/App.h lib/calendar.h lib/done.h lib/interface.h lib/todo.h 
+
+all: compile run
 
 compile: $(program)
 
@@ -50,5 +53,5 @@ run:
 clear:
 	-rm $(program)
 
-$(program): src/main.cpp src/App.cpp lib/App.h
+$(program): $(SRC) $(LIB)  
 	$(CC) $(CFLAGS) $^ -lncurses -o $@

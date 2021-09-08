@@ -31,13 +31,14 @@ void CApplication::start() {
             }
             highlight ++;
             if (highlight > 2) highlight = 0;
-        } catch (exit_exc) {
+        } catch (exit_exc & exit) {
             break;
         }
 
 
-        // mvwprintw(calendar, 2, 3, "%d", highlight);
-        // refresh();
+        mvwprintw(calendar, 2, 3, "%d", highlight);
+        mvwprintw(calendar, 3, 3, "%d", list.size());
+        refresh();
     } while (1);
     endwin();
 }
@@ -73,6 +74,8 @@ void CApplication::setUpTodo()
     // refresh();
     box (todo,0,0);
     mvwprintw(todo, 1,3 , "ToDo:");
+    readToDo();
+    writeToDo();
 }
 //----------------------------
 void CApplication::setUpDone()
@@ -110,12 +113,67 @@ void CApplication::runDone(){
 void CApplication::runTodo(){
     char c;
     int i = 3;
+    highlightTodo = 0;
     do {
         c = getch();
         if (c == 'q' || c == 'Q') throw exit_exc();
-        mvwprintw (todo, 2, i++, "%c", c);
-        wrefresh (todo);
+        else if (c == 'n') {
+            highlightTodo++;
+            if (highlightTodo >= list.size()) highlightTodo = 0;
+        }
+        else if (c == '-') {
+            mvwprintw (done, 2, 3, "do you want to delete thing?");
+            wrefresh(done);
+            c = getch();
+            if (c == 'y' || c == 'Y') list.erase (list.begin() + highlightTodo);
+        }
+        else if (c == '+') {
+            std::string toAdd;
+            int i = 3;
+            int ifadd = 1;
+            do {
+                c = getch();
+                if (c == 27) {
+                    ifadd = 0;
+                    break;
+                }
+                mvwprintw (done, 2, i++, "%c", c);
+                wrefresh(done);
+                toAdd.push_back(c);
+            } while (c != '\n');
+            if (ifadd) list.push_back(toAdd);
+        }
+        writeToDo();
+        wrefresh(todo);
     } while (c != '\t');
+    highlightTodo = -1;
+    writeToDo();
+    wrefresh(todo);
     // highlight++;
 }
 //----------------------------
+void CApplication::readToDo(){
+    std::ifstream file ("/home/daniel/Documents/git/todoList/todo.txt");
+    std::string line;
+    if (file.is_open()) {
+        while (getline(file, line)) {
+            list.push_back(line);
+        }
+    }
+
+    file.close();
+}
+//----------------------------
+void CApplication::writeToDo() {
+    // werase (todo);
+    int i = 2;
+    for (auto const & x : list) {
+        if (highlightTodo == i - 2) wattron (todo, A_REVERSE);
+        mvwprintw (todo, i++, 3 , "%d.%s", i-2, x.data());
+        wattroff (todo, A_REVERSE);
+    }
+}
+//----------------------------
+CApplication::~CApplication (){
+    endwin();
+}
