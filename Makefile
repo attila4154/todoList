@@ -41,7 +41,8 @@ CC=g++
 CFLAGS= -Wall -pedantic -g -fsanitize=address
 
 SRC= src/main.cpp src/App1.cpp src/interface.cpp src/calendar.cpp src/done.cpp src/todo.cpp
-LIB= lib/App.h lib/calendar.h lib/done.h lib/interface.h lib/todo.h 
+# LIB= lib/App.h lib/calendar.h lib/done.h lib/interface.h lib/todo.h 
+LIB=  
 
 all: compile run
 

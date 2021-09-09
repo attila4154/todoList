@@ -5,9 +5,8 @@
 
 class Interface {
   public:
-    static int height;
-    static int width;
-
+    static int termHeight;
+    static int termWidth;
     
     virtual void setUp() = 0;
     virtual void Run() = 0;
@@ -17,5 +16,9 @@ class Interface {
     virtual ~Interface() {}
   
   protected:
+    void clearRow(int row);
+
     WINDOW * window;
+    int height;
+    int width;
 };

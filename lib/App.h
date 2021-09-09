@@ -13,31 +13,33 @@
 #include <vector>
 #include <string>
 
+// #define LUI long unsigned int
+
 class CApplication {
   private:
     std::vector<Interface*> interfaces;
     std::vector<std::string> list;
-    WINDOW * calendar;
-    WINDOW * todo;
-    WINDOW * done;
-    WINDOW * hours;
-    WINDOW * windows[3];
-    int height, width, x, y;
+    // WINDOW * calendar;
+    // WINDOW * todo;
+    // WINDOW * done;
+    // WINDOW * hours;
+    // WINDOW * windows[3];
+    // int height, width, x, y;
     int highlight;
-    int highlightTodo = -1;
+    // int highlightTodo = -1;
 
 //------------------
-    void runTodo();
-    void runDone();
-    void runCalendar();
+    // void runTodo();
+    // void runDone();
+    // void runCalendar();
 
     void setUp();
-    void setUpCal();
-    void setUpTodo();
-    void setUpDone();
+    // void setUpCal();
+    // void setUpTodo();
+    // void setUpDone();
 
-    void readToDo();
-    void writeToDo();
+    // void readToDo();
+    // void writeToDo();
     
    public: 
     void start();

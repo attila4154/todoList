@@ -1,6 +1,7 @@
 #pragma once
 
 #include "interface.h"
+#include "task.h"
 #include <string>
 #include <fstream>
 #include <vector>
@@ -17,7 +18,8 @@ class ToDo : public Interface {
   private:
     void readToDo();
     void writeToDo();
+    void writeToFile();
 
     int highlight;
-    std::vector<std::string> list;
+    std::vector<Task> list;
 };

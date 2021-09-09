@@ -1,14 +1,17 @@
 #include "../lib/done.h"
 
 Done::Done () {
-    
+    setUp();
 }
+
 Done::~Done () {
     
 }
 
 void Done::setUp() {
-    window = newwin (height/2, width, height/2, 0);
+    height = termHeight/2;
+    width = termWidth;
+    window = newwin (height, width, height, 0);
     box (window, 0, 0);
     mvwprintw (window, 1,3 , "Done:");
 }
