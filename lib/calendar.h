@@ -10,15 +10,16 @@ class Calendar : public Interface {
   public:
     Calendar ();
     virtual ~Calendar();
-    void setUp () override;
-    void Run () override;
-    void printHead ();
-    void printDays();
-    void reprint () override;
-    void reprintBold () override;
-    int findWDay();
+    void setUp ()           override;
+    void Run ()             override;
+    void printHeader ()     override;
+    void printHeaderBold () override;
+    
   
   private:
+    void printDays ();
+    void printMonth();
+    int  findFirstDay ();
     int highlightDay;
     int highlightMon;
     int highlightYear;

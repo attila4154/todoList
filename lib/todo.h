@@ -5,6 +5,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <sstream>
 
 
 class ToDo : public Interface {
@@ -12,14 +13,20 @@ class ToDo : public Interface {
     ToDo ();
     void setUp () override;
     void Run () override;
-    void reprint () override;
-    void reprintBold () override;
+    void printHeader() override;
+    void printHeaderBold() override;
+    void refresh() override;
     ~ToDo();
   private:
     void readToDo();
     void writeToDo();
     void writeToFile();
 
+    int taskWidth, themeWidth, dateWidth;
     int highlight;
+
     std::vector<Task> list;
+
+    WINDOW * add;
+    int addHeight, addWidth;
 };

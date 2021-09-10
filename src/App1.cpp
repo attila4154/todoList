@@ -3,28 +3,29 @@
 void CApplication::start() {
 
     setUp();
-    //--------------------
-    highlight = 0;
     
     do {
         /// reprints "highlighted area"
         for (long unsigned i = 0; i < interfaces.size(); i++) {
-            if ((int) i == highlight) interfaces[highlight]->reprintBold();
-            else interfaces[i]->reprint();
+            if ((int) i == highlight) interfaces[highlight]->printHeaderBold();
+            else interfaces[i]->printHeader();
             interfaces[i]->refresh();
         }
         
         try {
-            interfaces[highlight]->Run();
-            highlight ++;
-            if (highlight > 2) highlight = 0;
+            interfaces[highlight++]->Run();
+            if (highlight > 3) highlight = 0;
         } catch (exit_exc & exit) {
             break;
+        } catch (date_change & change) {
+            Interface::day = change.day;
+            Interface::mon = change.mon;
+            Interface::year = change.year;
+            highlight--;
+            if (highlight < 0) highlight = interfaces.size() - 1;
         }
 
-        // refresh();
     } while (1);
-    endwin();
 }
 
 void CApplication::setUp() {
@@ -37,12 +38,14 @@ void CApplication::setUp() {
         1.calendar
         2.todo list 
         3.done
+        4.spent
     */
 
     getmaxyx (stdscr, Interface::termHeight, Interface::termWidth);
     interfaces.push_back(new Calendar());
     interfaces.push_back(new ToDo());
     interfaces.push_back(new Done());
+    interfaces.push_back(new Spent());
 
     refresh();
 
@@ -51,8 +54,7 @@ void CApplication::setUp() {
     }
 }
 //----------------------------
-CApplication::~CApplication (){
-    // dynamic_cast <ToDo *> (interface[1])->writeToFile();
+CApplication::~CApplication () {
     for (auto interface : interfaces) {
         delete interface;
     }

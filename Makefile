@@ -40,7 +40,7 @@ program=todoList
 CC=g++
 CFLAGS= -Wall -pedantic -g -fsanitize=address
 
-SRC= src/main.cpp src/App1.cpp src/interface.cpp src/calendar.cpp src/done.cpp src/todo.cpp
+SRC= src/main.cpp src/App1.cpp src/interface.cpp src/calendar.cpp src/done.cpp src/todo.cpp src/task.cpp src/spent.cpp src/exception.cpp
 # LIB= lib/App.h lib/calendar.h lib/done.h lib/interface.h lib/todo.h 
 LIB=  
 

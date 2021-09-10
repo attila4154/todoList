@@ -15,3 +15,13 @@ Task::Task (const std::string & task, const std::string & theme, int day, int mo
     date.tm_mday = day;
 }
 //-----------------------
+int Task::day() const{
+    return date.tm_mday;
+}
+int Task::mon() const {
+    return date.tm_mon;
+}
+int Task::year() const {
+    return (date.tm_year - 2000) % 100;
+}
+//-----------------------

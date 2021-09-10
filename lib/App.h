@@ -4,6 +4,7 @@
 #include "calendar.h"
 #include "done.h"
 #include "todo.h"
+#include "spent.h"
 
 #include "exceptions.h"
 

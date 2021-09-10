@@ -1,4 +1,4 @@
 #theme, taskName, day, mon, year, (hour)
 #theme, taskName
 study, sockets in java, 20, 9, 2021
-other, kirril lox
+other, kirril lox, 0, 0, 0
