@@ -13,7 +13,6 @@ class ToDo : public Interface {
     ToDo ();
     void setUp () override;
     void Run () override;
-    void addRun();
     void printHeader() override;
     void printHeaderBold() override;
     void refresh() override;
@@ -22,6 +21,9 @@ class ToDo : public Interface {
     void readToDo();
     void writeToDo();
     void writeToFile();
+    void addRun();
+    void clearAddRow (int row);
+    std::string readString ();
 
     int taskWidth, themeWidth, dateWidth;
     int highlight;

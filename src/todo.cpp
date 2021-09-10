@@ -51,55 +51,74 @@ void ToDo::Run () {
     wrefresh(window);
     ///next interface is not "done" but "add" which is not a different class:
 
-    do {
-        ///highlighting the header:
-        wattron(add, A_REVERSE);
-        mvwprintw (add, 1, 2, "Add:");
-        wattroff(add, A_REVERSE);
-        wrefresh(add);
-        ///get the enter char:
-
-        c = getch();
-        if (c == '\n') {
-            int i = 3;
-            do {
-                c = getch();
-                mvwprintw (add, 2, i++, "%c", c);
-                wrefresh(add);
-            } while (c != '\n');
-        }
-
-
-    } while (c != '\t');
-    mvwprintw (add, 1, 2, "Add:");
-    wrefresh(add);
+    addRun();
 }
 //---------------------
 void ToDo::addRun() {
+    wattron(add, A_REVERSE);
+    mvwprintw (add, 1, 2, "Add:");
+    wattroff(add, A_REVERSE);
+    wrefresh(add);
     /*
-        1.
+        1.taskName
+        2.theme.
+        3.due date(optionally)
 
     */
+    char c;
     do {
-        ///highlighting the header:
-        wattron(add, A_REVERSE);
-        mvwprintw (add, 1, 2, "Add:");
-        wattroff(add, A_REVERSE);
-        wrefresh(add);
-        ///get the enter char:
+        std::string name;
+        std::string theme;
+        try {
+            mvwprintw (add, 1, 8, "enter task name:");
+            wrefresh(add);
+            name = readString ();
+            // for (int i = 8; i < addWidth - 1; i ++) mvwprintw (add,1,i," ");
+            clearAddRow (1);
+            clearAddRow (2);
+            mvwprintw (add, 1, 8, "enter theme name:");
+            wrefresh(add);
+            theme = readString ();
+        } catch (exit_exc & e) {
+            break;
+        }
+        list.emplace_back (Task {name, theme, 0, 0, 0});
 
         c = getch();
-        if (c == '\n') {
-            int i = 3;
-            do {
-                c = getch();
-                mvwprintw (add, 2, i++, "%c", c);
-                wrefresh(add);
-            } while (c != '\n');
-        }
-
-
     } while (c != '\t');
+    mvwprintw(add, 1, 2, "Add:");
+    // for (int i = 8; i < addWidth - 1; i ++) mvwprintw (add,1,i," ");
+    clearAddRow (1);
+    clearAddRow (2);
+    wrefresh(add);
+}
+//---------------------
+std::string ToDo::readString () {
+    for (int i = 1; i < addWidth; i++) mvwprintw (add, 2, i, " ");
+    char c;
+    std::string read;
+    do {
+        c = getch();
+        if (c == '\n') return read;
+        if (c == 27 || c == '\t') throw exit_exc();
+        if (c == 127) {
+            if (read.size()) {
+                mvwprintw (add, 2, read.size()+1, " ");
+                read.pop_back();
+                wrefresh(add);
+            }
+            continue;
+        }
+        read.push_back(c);
+        mvwprintw (add, 2, read.size () + 1, "%c", c);
+        // mvwprintw (add, 3, read.size () + 1, "%d", c);
+        wrefresh(add);
+    } while (1);
+}
+//---------------------
+void ToDo::clearAddRow (int row) {
+    int i = row != 1 ? 1 : 8;
+    for ( ; i < addWidth - 1; i++) mvwprintw (add, row, i, " ");
 }
 //---------------------
 void ToDo::refresh() {

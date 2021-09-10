@@ -32,6 +32,7 @@ void CApplication::setUp() {
     initscr();
     noecho();
     cbreak();
+    curs_set (0);
     highlight = 0;
     
     /* create instances for interface:
