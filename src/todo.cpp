@@ -75,6 +75,33 @@ void ToDo::Run () {
     wrefresh(add);
 }
 //---------------------
+void ToDo::addRun() {
+    /*
+        1.
+
+    */
+    do {
+        ///highlighting the header:
+        wattron(add, A_REVERSE);
+        mvwprintw (add, 1, 2, "Add:");
+        wattroff(add, A_REVERSE);
+        wrefresh(add);
+        ///get the enter char:
+
+        c = getch();
+        if (c == '\n') {
+            int i = 3;
+            do {
+                c = getch();
+                mvwprintw (add, 2, i++, "%c", c);
+                wrefresh(add);
+            } while (c != '\n');
+        }
+
+
+    } while (c != '\t');
+}
+//---------------------
 void ToDo::refresh() {
     wrefresh(window);
     wrefresh(add);

@@ -8,8 +8,6 @@ class Done : public Interface {
     ~Done();
     void setUp () override;
     void Run () override;
-    // void reprint () override;
-    // void reprintBold () override;
     void printHeader() override;
     void printHeaderBold() override;
   private:

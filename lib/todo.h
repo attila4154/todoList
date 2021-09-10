@@ -13,6 +13,7 @@ class ToDo : public Interface {
     ToDo ();
     void setUp () override;
     void Run () override;
+    void addRun();
     void printHeader() override;
     void printHeaderBold() override;
     void refresh() override;

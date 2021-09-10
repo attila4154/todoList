@@ -21,8 +21,8 @@ void CApplication::start() {
             Interface::day = change.day;
             Interface::mon = change.mon;
             Interface::year = change.year;
-            highlight--;
-            if (highlight < 0) highlight = interfaces.size() - 1;
+            highlight = 0;
+            // if (highlight < 0) highlight = interfaces.size() - 1;
         }
 
     } while (1);
