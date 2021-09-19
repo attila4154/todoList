@@ -3,7 +3,29 @@
 
 //=====================
 Calendar::Calendar() {
-    setUp();
+    std::time_t t = std::time(0);
+    std::tm* now = std::localtime(&t);
+    /*
+        tm_day returns month day from 1 to 31
+        tm_mon returns month from 0 to 11
+        tm_year returns year since 1900
+    */
+    highlightDay = now->tm_mday - 1;
+    highlightMon = now->tm_mon;
+    highlightYear = now->tm_year + 1900;
+    Interface::day = highlightDay + 1;
+    Interface::mon = highlightMon + 1;
+    Interface::year = highlightYear;
+    // tm Interface::date = tm {};
+    Interface::date.tm_mday = Interface::day;
+    Interface::date.tm_mon = Interface::mon;
+    Interface::date.tm_year = Interface::year;
+
+    height = termHeight/2;
+    width = termWidth/3;
+    window = newwin (height, width, 0, 0);
+    box (window, 0, 0);
+    printHeader();
 }
 //---------------------
 Calendar::~Calendar() {
@@ -29,9 +51,6 @@ void Calendar::Run () {
             if (i == highlightDay) wattron (window, A_REVERSE);
             mvwprintw (window, y, x*daysGap + leftGap, "%d", i+1);
             wattroff (window, A_REVERSE);
-            mvwprintw (window, 4, width - 4, "%d", wday);
-            // mvwprintw (window, 5, width - 4, "%d", highlightMon);
-            // mvwprintw (window, 6, width - 6, "%d", highlightYear);
             if (x % 7 == 0) {
                 x = 1;
                 y++;
@@ -103,28 +122,10 @@ int Calendar::findFirstDay() {
     return (1 + y + (y / 4) - (y / 100) + (y / 400) + ((31 * m) / 12)) % 7;
 }
 //---------------------
-void Calendar::setUp () {
-    ///find current date and set up calendar window
-    std::time_t t = std::time(0);
-    std::tm* now = std::localtime(&t);
-    /*
-        tm_day returns month day from 1 to 31
-        tm_mon returns month from 0 to 11
-        tm_year returns year since 1900
-    */
-    highlightDay = now->tm_mday - 1;
-    highlightMon = now->tm_mon;
-    highlightYear = now->tm_year + 1900;
-    Interface::day = highlightDay;
-    Interface::mon = highlightMon;
-    Interface::year = highlightYear;
-
-    height = termHeight/2;
-    width = termWidth/3;
-    window = newwin (height, width, 0, 0);
-    box (window, 0, 0);
-    printHeader();
-}
+// void Calendar::setUp () {
+//     ///find current date and set up calendar window
+    
+// }
 //---------------------
 void Calendar::printHeader() {
     mvwprintw (window, 1,3 , "Calendar:");

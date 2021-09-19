@@ -18,10 +18,25 @@ Task::Task (const std::string & task, const std::string & theme, int day, int mo
 int Task::day() const{
     return date.tm_mday;
 }
+//-----------------------
 int Task::mon() const {
     return date.tm_mon;
 }
+//-----------------------
 int Task::year() const {
     return (date.tm_year - 2000) % 100;
+}
+//-----------------------
+Task::Task (const Task & other){
+    date.tm_mday = other.date.tm_mday;
+    date.tm_mon = other.date.tm_mon;
+    date.tm_year = other.date.tm_year;
+    task = other.task;
+    theme = other.theme;
+}
+//-----------------------
+Task Task::operator = (const Task & other){
+    if (&other == this) return *this;
+    return other;
 }
 //-----------------------

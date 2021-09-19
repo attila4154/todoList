@@ -21,8 +21,13 @@ void CApplication::start() {
             Interface::day = change.day;
             Interface::mon = change.mon;
             Interface::year = change.year;
+            Interface::date.tm_mday = change.day;
+            Interface::date.tm_mon = change.mon;
+            Interface::date.tm_year = change.year;
             highlight = 0;
-            // if (highlight < 0) highlight = interfaces.size() - 1;
+        } catch (task_done & done) {
+            interfaces[2]->addTask (done.task);
+            highlight = 1;
         }
 
     } while (1);

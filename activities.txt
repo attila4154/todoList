@@ -1,0 +1,7 @@
+#dd mm yyyy name_of_activity hours_spent
+#short short short string short
+
+19 9 2021 read 2
+19 9 2021 read 2
+19 9 2021 read 2
+19 9 2021 read 2

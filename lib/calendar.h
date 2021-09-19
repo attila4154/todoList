@@ -10,7 +10,7 @@ class Calendar : public Interface {
   public:
     Calendar ();
     virtual ~Calendar();
-    void setUp ()           override;
+    // void setUp ()           override;
     void Run ()             override;
     void printHeader ()     override;
     void printHeaderBold () override;

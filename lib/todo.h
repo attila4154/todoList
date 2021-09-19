@@ -1,7 +1,6 @@
 #pragma once
 
 #include "interface.h"
-#include "task.h"
 #include <string>
 #include <fstream>
 #include <vector>
@@ -11,7 +10,7 @@
 class ToDo : public Interface {
   public:
     ToDo ();
-    void setUp () override;
+    // void setUp ();
     void Run () override;
     void printHeader() override;
     void printHeaderBold() override;
@@ -23,6 +22,11 @@ class ToDo : public Interface {
     void writeToFile();
     void addRun();
     void clearAddRow (int row);
+    void clearAdd ();
+    void readDate (int & day, int & mon, int & year);
+    void deleteTask ();
+    void moveTask ();
+    void changeHighlight ();
     std::string readString ();
 
     int taskWidth, themeWidth, dateWidth;
