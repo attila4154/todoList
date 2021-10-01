@@ -10,4 +10,3 @@ date_change::date_change (int day, int mon, int year) : day (day), mon(mon), yea
 }
 
 task_done::task_done (const Task & task) : task (task) {}
-

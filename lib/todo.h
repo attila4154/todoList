@@ -28,6 +28,7 @@ class ToDo : public Interface {
     void moveTask ();
     void changeHighlight ();
     std::string readString ();
+    void deleteFromVector();
 
     int taskWidth, themeWidth, dateWidth;
     int highlight;

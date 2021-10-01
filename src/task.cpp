@@ -35,8 +35,10 @@ Task::Task (const Task & other){
     theme = other.theme;
 }
 //-----------------------
-Task Task::operator = (const Task & other){
-    if (&other == this) return *this;
-    return other;
-}
+Task::Task () {}
+//-----------------------
+// Task& Task::operator = (Task & other) {
+//     if (&other == this) return *this;
+//     return other;
+// }
 //-----------------------

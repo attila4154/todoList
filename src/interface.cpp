@@ -5,6 +5,7 @@ int Interface::termWidth = 70;
 int Interface::day = 1;
 int Interface::mon = 9;
 int Interface::year = 2021;
+int date_compare::daysInMonths[12] = {31, 28, 30, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 tm Interface::date = tm {};
 
 
@@ -24,4 +25,14 @@ void Interface::clearScreen() {
 
 void Interface::addTask (const Task & task) {
 
+}
+
+void Interface::redrawHighlightedBox() {
+    wattron (window, COLOR_PAIR(BLUE_BLACK));
+    box (window, 0,0 );
+    wattroff (window, COLOR_PAIR(BLUE_BLACK));
+}
+
+void Interface::redrawBox(){
+    box (window, 0,0);
 }

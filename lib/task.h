@@ -4,10 +4,12 @@
 
 
 struct Task {
+    Task ();
     Task (const std::string & task, const std::string & theme, int day, int mon, int year, int hour);
     Task (const std::string & task, const std::string & theme, int day, int mon, int year);
     Task (const Task & other);
-    Task operator = (const Task & other);
+    // Task & operator = (const Task & other);
+    // Task & operator = (Task & other);
     std::string task;
     std::string theme;
 

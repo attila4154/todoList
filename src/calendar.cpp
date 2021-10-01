@@ -16,7 +16,6 @@ Calendar::Calendar() {
     Interface::day = highlightDay + 1;
     Interface::mon = highlightMon + 1;
     Interface::year = highlightYear;
-    // tm Interface::date = tm {};
     Interface::date.tm_mday = Interface::day;
     Interface::date.tm_mon = Interface::mon;
     Interface::date.tm_year = Interface::year;
@@ -34,7 +33,6 @@ Calendar::~Calendar() {
 //---------------------
 void Calendar::Run () {
     wday = findFirstDay();
-
     char c;
     /* y is row coordinates, x is column coordinates,
        starts with the first day of the month 
@@ -56,7 +54,7 @@ void Calendar::Run () {
                 y++;
             } else x++;
         }
-        refresh();
+        wrefresh (window);
         c = getch();
         switch (c) {
             case 'q':
@@ -121,11 +119,6 @@ int Calendar::findFirstDay() {
     */ 
     return (1 + y + (y / 4) - (y / 100) + (y / 400) + ((31 * m) / 12)) % 7;
 }
-//---------------------
-// void Calendar::setUp () {
-//     ///find current date and set up calendar window
-    
-// }
 //---------------------
 void Calendar::printHeader() {
     mvwprintw (window, 1,3 , "Calendar:");

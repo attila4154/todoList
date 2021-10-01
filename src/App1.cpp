@@ -7,8 +7,14 @@ void CApplication::start() {
     do {
         /// reprints "highlighted area"
         for (long unsigned i = 0; i < interfaces.size(); i++) {
-            if ((int) i == highlight) interfaces[highlight]->printHeaderBold();
-            else interfaces[i]->printHeader();
+            if ((int) i == highlight) {
+                interfaces[highlight]->printHeaderBold();
+                interfaces[highlight]->redrawHighlightedBox();
+            }
+            else {
+                interfaces[i]->printHeader();
+                interfaces[i]->redrawBox();
+            }
             interfaces[i]->refresh();
         }
         
@@ -34,13 +40,21 @@ void CApplication::start() {
 }
 
 void CApplication::setUp() {
+    /**
+
+    */
     initscr();
     noecho();
     cbreak();
     curs_set (0);
+    use_default_colors();
+    start_color();
+    init_pair(BLUE_BLACK, COLOR_BLUE, -1);
+    init_pair(RED_BLACK, COLOR_RED, -1);
+    
     highlight = 0;
     
-    /* create instances for interface:
+    /** create instances for interface:
         1.calendar
         2.todo list 
         3.done
@@ -54,7 +68,6 @@ void CApplication::setUp() {
     interfaces.push_back(new Spent());
 
     refresh();
-
     for (auto interface: interfaces) {
         interface->refresh();
     }

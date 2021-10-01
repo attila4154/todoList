@@ -6,7 +6,7 @@ ToDo::ToDo() {
     */
     height = termHeight/2;
     width = 2 * termWidth/3;
-    dateWidth = 12;
+    dateWidth = 16;
     themeWidth = (width - dateWidth)/2;
     taskWidth = width - themeWidth - dateWidth;
     /*
@@ -17,12 +17,11 @@ ToDo::ToDo() {
 
     window = newwin (height, width, 0, width/2);
     box (window,0,0);
-    mvwprintw(window, 1,3 , "ToDo:");
     
     add = newwin (addHeight, addWidth, height, width/2);
     box (add, 0,0);
     mvwprintw (add, 1, 2, "Add:");
-    
+
     readToDo();
     writeToDo();
 }
@@ -38,6 +37,7 @@ void ToDo::Run () {
     do {
         writeToDo();
         printHeader();
+        // wrefresh(window);
         c = getch();
         switch (c) {
             case 'q':
@@ -45,6 +45,7 @@ void ToDo::Run () {
                 throw exit_exc();
                 break;
             case 'n':
+            case 'N':
                 changeHighlight();
                 break;
             case '-':
@@ -57,16 +58,20 @@ void ToDo::Run () {
         }
     } while (c != '\t');
     highlight = -1;
+    box (window, 0, 0);
     writeToDo();
-    wrefresh(window);
+    printHeader();
     ///next interface is not "done" but "add" which is not a different class:
     addRun();
 }
 //---------------------
 void ToDo::addRun() {
-    wattron(add, A_REVERSE);
-    mvwprintw (add, 1, 2, "Add:");
-    wattroff(add, A_REVERSE);
+    wattron(add, COLOR_PAIR(BLUE_BLACK));
+    box(add, 0, 0);
+    wattroff(add,COLOR_PAIR(BLUE_BLACK));
+    // wattron(add, A_REVERSE);
+    // mvwprintw (add, 1, 2, "Add:");
+    // wattroff(add, A_REVERSE);
     wrefresh(add);
     /*
         1.taskName
@@ -99,7 +104,8 @@ void ToDo::addRun() {
                 readDate (day, mon, year);
                 list.emplace_back (Task {name, theme, day, mon, year});
             }
-
+            writeToDo();
+            printHeader();
         } catch (exit_exc & e) {
             break;
         }
@@ -107,25 +113,46 @@ void ToDo::addRun() {
     mvwprintw(add, 1, 2, "Add:");
     clearAddRow (1);
     clearAddRow (2);
+    box (add, 0, 0);     
     wrefresh(add);
 }
 //---------------------
 void ToDo::deleteTask () {
     if (list.size()) {
         char c;
-        mvwprintw (window, height - 2, 3, "do you want to delete this task?");
+        mvwprintw (window, height - 2, 3, "do you want to delete this task? %d", highlight);
         wrefresh (window);
         do {
+            mvwprintw (add, 2, 3, "%s %s",
+            (list.begin()+highlight)->task.data(), (list.begin()+highlight)->theme.data());
+            wrefresh (add);
             c = getch();
-            if (c == 'y' || c == 'Y') list.erase (list.begin() + highlight);
+            if (c == 'y' || c == 'Y') {
+                list.erase (list.begin() + highlight);
+                highlight--;
+                if (highlight < 0) highlight = 0;
+            }   
             if (c == 'n' || c == 'N') break;
         } while (!(c == 'y' || c == 'y' || c == 'n' || c == 'N'));
-        writeToDo();
     }
     else {
         mvwprintw (window, height - 2, 3, "nothing to delete");
     }
         wrefresh (window);
+}
+//---------------------
+void ToDo::deleteFromVector() {
+
+    for (int i = highlight; i < list.size() - 1; i++) {
+        // std::swap (list[i], list[i+1]);
+        Task & temp = list[i+1];
+        list[i+1] = list[i];
+        list[i] = temp;
+    }
+    list.pop_back();
+    // list[highlight].task = list[highlight].task + "deleted";
+    // list[highlight] = Task ();
+    // list[highlight].task = "";
 }
 //---------------------
 void ToDo::moveTask () {
@@ -136,15 +163,15 @@ void ToDo::moveTask () {
         do {
             c = getch();
             if (c == 'y' || c == 'Y') {
-                // task_done done = new task_done (list[highlight]);
-                // list.erase (list.begin() + highlight);
-                // mvwprintw (add, 2, 3, "%s %s" ,list[highlight].task, list[highlight].theme);
-                wrefresh (add);
-                throw task_done (list[highlight]);
+                task_done done {list[highlight]};
+                list.erase (list.begin() + highlight);
+                highlight--;
+                if (highlight < 0) highlight = 0;
+                throw task_done (done);
             }
             if (c == 'n' || c == 'N') break;
         } while (!(c == 'y' || c == 'y' || c == 'n' || c == 'N'));
-        writeToDo();
+        // writeToDo();
     }
     else {
         mvwprintw (window, height - 2, 3, "no tasks");
@@ -153,30 +180,11 @@ void ToDo::moveTask () {
 }
 //---------------------
 void ToDo::changeHighlight () {
-    if (highlight++ >= (int) list.size()-1) highlight = 0;
+    highlight++;
+    if (highlight >= (int) list.size()) highlight = 0;
 }
 //---------------------
 std::string ToDo::readString () {
-    // for (int i = 1; i < addWidth; i++) mvwprintw (add, 2, i, " ");
-    // char c;
-    // std::string read;
-    // do {
-    //     c = getch();
-    //     if (c == '\n') return read;
-    //     if (c == 27 || c == '\t') throw exit_exc();
-    //     if (c == 127) {
-    //         if (read.size()) {
-    //             mvwprintw (add, 2, read.size()+1, " ");
-    //             read.pop_back();
-    //             wrefresh(add);
-    //         }
-    //         continue;
-    //     }
-    //     read.push_back(c);
-    //     mvwprintw (add, 2, read.size () + 1, "%c", c);
-    //     wrefresh(add);
-    // } while (1);
-
     clearAddRow (2);
     char c;
     std::string read;
@@ -227,7 +235,7 @@ void ToDo::refresh() {
 //---------------------
 void ToDo::printHeader () {
     for (int i = 1; i < width - 1; i++) mvwprintw (window, 2, i, "-");
-    mvwprintw (window, 1,3 , "Tasks:");
+    mvwprintw (window, 1, 3, "Tasks:");
     for (int i = 1; i < height - 1; i++) mvwprintw (window, i, width - dateWidth, "|");
     for (int i = 1; i < height - 1; i++) mvwprintw (window, i, width - dateWidth - themeWidth, "|");
     mvwprintw (window, 2, taskWidth, "+");
@@ -264,30 +272,58 @@ void ToDo::readToDo(){
 }
 //----------------------------
 void ToDo::writeToDo() {
-    for (int i = 3; i < height - 1; i ++) {
+    date_compare compare;
+    for (int i = 1; i < height - 1; i ++) {
         clearRow(i);
     }
-    int i = 3;
+    int i = 0;
     for (auto const & x : list) {
-        if (highlight == i - 3) wattron (window, A_REVERSE);
-        mvwprintw (window, i, 3 , "%d.%s", i-2, x.task.data());
+        /**
+            while printing highlihgted element, print it with A_REVERSE highlight
+        */
+        if (highlight == i) wattron (window, A_REVERSE);
+        mvwprintw (window, i + 3, 3 , "%d.%s", i+1, x.task.data());
         wattroff (window, A_REVERSE);
-        mvwprintw (window, i, taskWidth+2, "%s", x.theme.data());
-        if (x.day()) 
-            mvwprintw (window, i, taskWidth + themeWidth + 2, "%02d.%02d.%02d", 
+        mvwprintw (window, i + 3, taskWidth+2, "%s", x.theme.data());
+        if (x.day()) {
+            if (compare(x.date, Interface::date)) wattron (window, COLOR_PAIR(COLOR_RED));
+            mvwprintw (window, i + 3, taskWidth + themeWidth + 2, "%02d.%02d.%02d", 
                    x.day(), x.mon(), x.year());
-        else mvwprintw (window, i, taskWidth + themeWidth + 2, "--------");
+            wattroff (window, COLOR_PAIR(COLOR_RED));
+            wprintw (window, " (%d)", compare.difference(Interface::date, x.date));
+        }
+        else mvwprintw (window, i + 3, taskWidth + themeWidth + 2, "--------");
         i++;
     }
-    // wrefresh (window);
+
+    // int h = 3;
+    // for (int i = 0; i < list.size();i ++) {
+    //     // h = i > heigth - 1 ? 
+    //     if (highlight == i) wattron (window, A_REVERSE);
+    //     mvwprintw (window, i + 3, 3 , "%d.%s", i+1, list[i].task.data());
+    //     wattroff (window, A_REVERSE);
+    //     mvwprintw (window, i + 3, taskWidth+2, "%s", list[i].theme.data());
+    //     if (list[i].day()) {
+    //         if (compare(list[i].date, Interface::date)) wattron (window, COLOR_PAIR(COLOR_RED));
+    //         mvwprintw (window, i + 3, taskWidth + themeWidth + 2, "%02d.%02d.%02d", 
+    //                list[i].day(), list[i].mon(), list[i].year());
+    //         wattroff (window, COLOR_PAIR(COLOR_RED));
+    //         wprintw (window, " (%d)", compare.difference(Interface::date, list[i].date));
+    //     }
+    //     else mvwprintw (window, i + 3, taskWidth + themeWidth + 2, "--------");
+    // }
 }
 //----------------------------
 void ToDo::writeToFile() {
-    // std::ofstream file ("/home/daniel/Documents/git/todoList/todo.txt");
-    // std::string line;
-    // if (file.is_open()) {
-    //     for (const auto & line : list)
-    //         file << line << std::endl; 
-    // }
-    // file.close();
+    std::ofstream file ("/home/daniel/Documents/git/todoList/todo2.txt");
+    if (file.is_open()) {
+        for (const auto & element : list){
+            file << element.theme << ',' << element.task << ','<< element.day()  << ',' << element.mon() <<
+            ',';
+            if (element.year()) file << element.year() + 2000;
+            else file << 0;
+            file << '\n';
+        }
+        file.close();
+    }
 }
